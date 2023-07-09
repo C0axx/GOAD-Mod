@@ -1,0 +1,621 @@
+{
+"lab" : {
+    "hosts" : {
+        "dc01" : {
+            "hostname" : "dc01",
+            "type" : "dc",
+            "local_admin_password": "8dCT-DJjgScp",
+            "domain" : "Pirate.ship",
+            "path" : "DC=Pirate,DC=ship",
+            "local_groups" : {
+                "Administrators" : [
+                    "Pirateship\\jack.sparrow",
+                    "Pirateship\\will.turner",
+                    "Pirateship\\ShipRiders"
+                ],
+                "Remote Desktop Users" : [
+                    "Pirateship\\Pirates",
+                    "Pirateship\\Storm"
+                ]
+            },
+            "scripts" : ["sidhistory.ps1"],
+            "vulns" : ["disable_firewall"]
+        },
+        "srv01" : {
+            "hostname" : "srv01",
+            "type" : "server",
+            "local_admin_password": "EP+xh7Rk6j90",
+            "domain" : "Pirate.ship",
+            "path" : "DC=Pirate,DC=ship",
+            "local_groups" : {
+                "Administrators" : [
+                    "Pirateship\\harbor.master",
+                    "Pirateship\\ship.master"
+                ]
+            },
+            "Remote Desktop Users" : [
+                "Pirateship\\master"
+            ],
+            "scripts" : [],
+            "vulns" : []
+        },
+        "dc02" : {
+            "hostname" : "dc02",
+            "type" : "dc",
+            "local_admin_password": "NgtI75cKV+Pu",
+            "domain" : "dev.Pirate.ship",
+            "path" : "DC=dev,DC=Pirate,DC=ship",
+            "local_groups" : {
+                "Administrators" : [
+                    "dev\\john.shipmate",
+                    "dev\\catelyn.shipmate",
+                    "dev\\robb.shipmate"
+                ],
+                "Remote Desktop Users" : [
+                    "dev\\Shipmate"
+                ]
+            },
+            "scripts" : [
+                "asrep_roasting.ps1",
+                "constrained_delegation_use_any.ps1",
+                "constrained_delegation_kerb_only.ps1",
+                "ntlm_relay.ps1",
+                "responder.ps1",
+                "gpo_abuse.ps1",
+                "rdp_scheduler.ps1"
+            ],
+            "vulns" : ["disable_firewall","directory", "credentials", "autologon", "files"],
+            "vulns_vars" : {
+                "directory": {
+                    "setup": "c:\\setup"
+                },
+                "credentials" : {
+                    "TERMSRV/srv02": {
+                        "username" : "dev\\robb.shipmate",
+                        "secret"   : "cannonb@ll",
+                        "runas"    : "dev\\robb.shipmate",
+                        "runas_password" : "cannonb@ll"
+                    }
+                },
+                "autologon" : {
+                    "robb.shipmate" : {
+                        "username" : "dev\\robb.shipmate",
+                        "password" : "cannonb@ll"
+                    }
+                },
+                "files" : {
+                    "rdp" : {
+                        "src" : "dc02/bot_rdp.ps1",
+                        "dest" : "c:\\setup\\bot_rdp.ps1"
+                    }
+                }
+            }
+        },
+        "srv02" : {
+            "hostname" : "srv02",
+            "type" : "server",
+            "local_admin_password": "NgtI75cKV+Pu",
+            "domain" : "dev.Pirate.ship",
+            "path" : "DC=dev,DC=Pirate,DC=ship",
+            "use_laps": false,
+            "local_groups" : {
+                "Administrators" : [
+                    "dev\\john.cook"
+                ],
+                "Remote Desktop Users" : [
+                    "dev\\Ship Watch",
+                    "dev\\cook",
+                    "dev\\Shipmate"
+                ]
+            },
+            "scripts" : [],
+            "vulns" : ["disable_firewall", "openshares"],
+            "mssql":{
+                "sa_password": "Sup1_sa_P@ssw0rd!",
+                "svcaccount" : "sql_svc",
+                "sysadmins" : [
+                    "dev\\dave.snell"
+                ],
+                "executeaslogin" : {
+                    "dev\\sam.smith" : "sa",
+                    "dev\\brandon.Shipmate" :  "dev\\dave.snell"
+                },
+                "executeasuser" : {
+                    "alice_master_dbo": {
+                        "user": "dev\\alice.Shipmate",
+                        "db"  : "master",
+                        "impersonate" : "dbo"
+                    },
+                    "alice_dbms_dbo": {
+                        "user": "dev\\alice.Shipmate",
+                        "db"  : "msdb",
+                        "impersonate" : "dbo"
+                    }
+                },
+                "linked_servers": {
+                    "srv03" : {
+                        "data_src": "srv03.pirates.research",
+                        "users_mapping": [
+                            {"local_login": "dev\\dave.snell","remote_login": "sa", "remote_password": "sa_P@ssw0rd!"}
+                        ]
+                    }
+                }
+            }
+        },
+        "dc03" : {
+            "hostname" : "dc03",
+            "type" : "dc",
+            "local_admin_password": "Ufe-bVXSx9rk",
+            "domain" : "pirates.research",
+            "path" : "DC=Pirates,DC=research",
+            "local_groups" : {
+                "Administrators" : [
+                    "research\\weapons.master"
+                ],
+                "Remote Desktop Users" : [
+                    "research\\Master"
+                ]
+            },
+            "scripts" : [],
+            "vulns" : ["ntlmdowngrade", "disable_firewall"]
+        },
+        "srv03" : {
+            "hostname" : "srv03",
+            "type" : "server",
+            "local_admin_password": "978i2pF43UJ-",
+            "domain" : "pirates.research",
+            "path" : "DC=Pirates,DC=research",
+            "use_laps": true,
+            "local_groups" : {
+                "Administrators" : [
+                    "research\\black.beard"
+                ]
+            },
+            "Remote Desktop Users" : [
+                "research\\Pirates"
+            ],
+            "scripts" : [],
+            "vulns" : ["openshares","disable_firewall"],
+            "mssql":{
+                "sa_password": "sa_P@ssw0rd!",
+                "svcaccount" : "sql_svc",
+                "sysadmins" : [
+                    "research\\black.beard"
+                ],
+                "executeaslogin" : {
+                    "research\\food.cook" : "sa"
+                },
+                "executeasuser" : {},
+                "linked_servers": {
+                    "srv02" : {
+                        "data_src": "srv02.dev.Pirate.ship",
+                        "users_mapping": [
+                            {"local_login": "research\\black.beard","remote_login": "sa", "remote_password": "Sup1_sa_P@ssw0rd!"}
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "domains" : {
+        "pirates.research" : {
+            "dc": "dc03",
+            "domain_password" : "Ufe-bVXSx9rk",
+            "netbios_name": "research",
+            "ca_server": "srv03",
+            "trust" : "Pirate.ship",
+            "laps_path": "OU=Laps,DC=Pirates,DC=research",
+            "organisation_units" : {
+            },
+            "laps_readers": [
+                "food.cook",
+                "Spys"
+            ],
+            "groups" : {
+                "universal" : {},
+                "global" : {
+                    "Master" : {
+                        "managed_by" : "cannon.master",
+                        "path" : "CN=Users,DC=Pirates,DC=research"
+                    },
+                    "Pirates" : {
+                        "managed_by" : "black.beard",
+                        "path" : "CN=Users,DC=Pirates,DC=research"
+                    }
+                },
+                "domainlocal" : {
+                    "ShipFriends" : {
+                        "managed_by" : "weapons.master",
+                        "path" : "CN=Users,DC=Pirates,DC=research"
+                    },
+                    "Spys" : {
+                        "path" : "CN=Users,DC=Pirates,DC=research"
+                    }
+                }
+            },
+            "multi_domain_groups_member" : {
+                "ShipFriends" : [
+                    "Pirate.ship\\elizabeth.swann",
+                    "pirates.research\\weapons.master"
+                ],
+                "Spys" : [
+                    "Pirate.ship\\Pirates"
+                ]
+            },
+            "acls" : {
+                "GenericAll_black_beard" : {"for": "black.beard", "to": "cannon.master", "right": "GenericAll", "inheritance": "None"},
+                "GenericAll_spy_food" : {"for": "Spys", "to": "food.cook", "right": "GenericAll", "inheritance": "None"},
+                "GenericAll_black_esc4" : {"for": "black.beard", "to": "CN=ESC4,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=Pirates,DC=research", "right": "GenericAll", "inheritance": "None"},
+                "WriteProperty_cannon_domadmin" : {"for": "cannon.master", "to": "food.cook", "right": "WriteProperty", "inheritance": "All"},
+                "GenericWrite_ShipFriends_srv03" : {"for": "ShipFriends", "to": "srv03$", "right": "GenericWrite", "inheritance": "None"}
+            },
+            "users" : {
+                "weapons.master" : {
+                    "firstname"   : "weapons",
+                    "surname"     : "master",
+                    "password"    : "BurnThemAll!", 
+                    "city"        : "-",
+                    "description" : "Weapons Master",
+                    "groups"      : ["Master", "Domain Admins"],
+                    "path"        : "CN=Users,DC=Pirates,DC=research"
+                },
+                "cannon.master" : {
+                    "firstname"   : "cannon",
+                    "surname"     : "master",
+                    "password"    : "FlankThem!",
+                    "city"        : "-",
+                    "description" : "Cannon Master",
+                    "groups"      : ["Master"],
+                    "path"        : "CN=Users,DC=Pirates,DC=research"
+                },
+                "black.beard" : {
+                    "firstname"   : "black",
+                    "surname"     : "beard",
+                    "password"    : "Legend",
+                    "city"        : "-",
+                    "description" : "Black Beard",
+                    "groups"      : ["Pirates"],
+                    "path"        : "CN=Users,DC=Pirates,DC=research"
+                },
+                "food.cook" : {
+                    "firstname"   : "food",
+                    "surname"     : "cook",
+                    "password"    : "C00k1nF00d!",
+                    "city"        : "-",
+                    "description" : "food cook",
+                    "groups"      : ["Master"],
+                    "path"        : "CN=Users,DC=Pirates,DC=research"
+                },
+                "sql_svc" : {
+                    "firstname"   : "sql",
+                    "surname"     : "service",
+                    "password"    : "YouWillNotKerboroast1ngMeeeeee",
+                    "city"        : "-",
+                    "description" : "sql service",
+                    "groups"      : [],
+                    "path"        : "CN=Users,DC=Pirates,DC=research",
+                    "spns"        : ["MSSQLSvc/srv03.pirates.research:1433","MSSQLSvc/srv03.pirates.research"]
+                }
+            }
+        },
+        "dev.Pirate.ship" : {
+            "dc": "dc02",
+            "domain_password" : "NgtI75cKV+Pu",
+            "netbios_name": "dev",
+            "trust" : "",
+            "laps_path": "OU=Laps,DC=dev,DC=Pirate,DC=ship",
+            "organisation_units" : {
+            },
+            "groups" : {
+                "universal" : {},
+                "global" : {
+                    "Shipmate" : {
+                        "managed_by" : "john.shipmate",
+                        "path" : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                    },
+                    "Ship Watch" : {
+                        "managed_by" : "john.cook",
+                        "path" : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                    },
+                    "cook" : {
+                        "managed_by" : "john.cook",
+                        "path" : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                    }
+                },
+                "domainlocal" : {
+                    "AcrossTheSea" : {
+                        "path" : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                    }
+                }
+            },
+            "multi_domain_groups_member" : {
+                "AcrossTheSea" : [
+                    "pirates.research\\weapons.master"
+                ]
+            },
+            "acls" : {
+                "anonymous_rpc" : {"for": "NT AUTHORITY\\ANONYMOUS LOGON", "to": "DC=dev,DC=Pirate,DC=ship", "right": "ReadProperty", "inheritance": "All"},
+                "anonymous_rpc2" : {"for": "NT AUTHORITY\\ANONYMOUS LOGON", "to": "DC=dev,DC=Pirate,DC=ship", "right": "GenericExecute", "inheritance": "All"}
+            },
+            "users" : {
+                "alice.Shipmate" : {
+                    "firstname"   : "alice",
+                    "surname"     : "Shipmate",
+                    "password"    : "Needle",
+                    "city"        : "dc02",
+                    "description" : "alice Shipmate",
+                    "groups"      : ["Shipmate"],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                },
+                "john.shipmate" : {
+                    "firstname"   : "John",
+                    "surname"     : "Shipmate",
+                    "password"    : "ShipsP3aceAndHonor!",
+                    "city"        : "",
+                    "description" : "John Shipmate",
+                    "groups"      : ["Shipmate", "Domain Admins"],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                },
+                "catelyn.shipmate" : {
+                    "firstname"   : "Catelyn",
+                    "surname"     : "Shipmate",
+                    "password"    : "ShipQueen",
+                    "city"        : "",
+                    "description" : "Catelyn Shipmate",
+                    "groups"      : ["Shipmate"],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                },
+                "robb.shipmate" : {
+                    "firstname"   : "Robb",
+                    "surname"     : "Shipmate",
+                    "password"    : "cannonb@ll",
+                    "city"        : "dc02",
+                    "description" : "Robb Shipmate",
+                    "groups"      : ["Shipmate"],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                },
+                "Sarah.Shipmate" : {
+                    "firstname"   : "Sarah",
+                    "surname"     : "Shipmate",
+                    "password"    : "=_)(*&^%$#@!qazaq",
+                    "city"        : "dc02",
+                    "description" : "Sarah Shipmate",
+                    "groups"      : ["Shipmate"],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                },
+                "brandon.Shipmate" : {
+                    "firstname"   : "brandon",
+                    "surname"     : "Shipmate",
+                    "password"    : "ShipMate2023!",
+                    "city"        : "dc02",
+                    "description" : "brandon Shipmate",
+                    "groups"      : ["Shipmate"],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                },
+                "ricky.Shipmate" : {
+                    "firstname"   : "ricky",
+                    "surname"     : "Shipmate",
+                    "password"    : "Summer2023",
+                    "city"        : "dc02",
+                    "description" : "ricky Shipmate",
+                    "groups"      : ["Shipmate"],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                },
+                "Pirate" : {
+                    "firstname"   : "Pirate",
+                    "surname"     : "Pirate",
+                    "password"    : "Pirate",
+                    "city"        : "dc02",
+                    "description" : "Random Pirate",
+                    "groups"      : ["Shipmate"],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                },
+                "dave.snell" : {
+                    "firstname"   : "dave",
+                    "surname"     : "Snell",
+                    "password"    : "iknownothing",
+                    "city"        : "",
+                    "description" : "Jon Snow",
+                    "groups"      : ["Shipmate", "  "],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship",
+                    "spns"        : ["HTTP/overboard.dev.Pirate.ship"]
+                },
+                "sam.smith" : {
+                    "firstname"   : "Sam",
+                    "surname"     : "Smith",
+                    "password"    : "IloveShips!",
+                    "city"        : "",
+                    "description" : "Sam Smith (Password : IloveShips!)",
+                    "groups"      : ["Ship Watch"],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                },
+                "john.cook" : {
+                    "firstname"   : "John",
+                    "surname"     : "cook",
+                    "password"    : "Sh1pW@tch",
+                    "city"        : "",
+                    "description" : "John cook",
+                    "groups"      : ["Ship Watch", "cook"],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship"
+                },
+                "sql_svc" : {
+                    "firstname"   : "sql",
+                    "surname"     : "service",
+                    "password"    : "YouWillNotKerboroast1ngMeeeeee",
+                    "city"        : "-",
+                    "description" : "sql service",
+                    "groups"      : [],
+                    "path"        : "CN=Users,DC=dev,DC=Pirate,DC=ship",
+                    "spns"        : ["MSSQLSvc/srv02.dev.Pirate.ship:1433","MSSQLSvc/srv02.dev.Pirate.ship"]
+                }
+            }
+        },
+        "Pirate.ship" : {
+            "dc": "dc01",
+            "domain_password" : "8dCT-DJjgScp",
+            "netbios_name": "PIRATESHIP",
+            "trust" : "pirates.research",
+            "laps_path": "OU=Laps,DC=Pirate,DC=ship",
+            "organisation_units" : {
+                "harbor"        : { "path" : "DC=Pirate,DC=ship"},
+                "SecretIslands" : { "path" : "DC=Pirate,DC=ship"},
+                "Riverlands"  : { "path" : "DC=Pirate,DC=ship"},
+                "Badlands"  : { "path" : "DC=Pirate,DC=ship"},
+                "Stormlands"  : { "path" : "DC=Pirate,DC=ship"},
+                "Westerlands" : { "path" : "DC=Pirate,DC=ship"},
+                "Windlands"       : { "path" : "DC=Pirate,DC=ship"},
+                "EasterLands"       : { "path" : "DC=Pirate,DC=ship"}
+            },
+            "groups" : {
+                "universal" : {},
+                "global" : {
+                    "Master" : {
+                        "managed_by" : "harbor.master",
+                        "path" : "OU=Westerlands,DC=Pirate,DC=ship"
+                    },
+                    "Storm" : {
+                        "managed_by" : "jack.sparrow",
+                        "path" : "OU=Stormlands,DC=Pirate,DC=ship"
+                    },
+                    "Pirates" : {
+                        "path" : "OU=Badlands,DC=Pirate,DC=ship"
+                    },
+                    "BlackPearl" : {
+                        "path" : "OU=Badlands,DC=Pirate,DC=ship"
+                    },
+                    "HarborGuard" : {
+                        "path" : "OU=Badlands,DC=Pirate,DC=ship"
+                    },
+                    "ShipRiders" : {
+                        "path" : "OU=Badlands,DC=Pirate,DC=ship"
+                    }
+                },
+                "domainlocal" : {
+                    "AcrossTheNarrowSea" : {
+                        "path" : "CN=Users,DC=Pirate,DC=ship"
+                    }
+                }
+            },
+            "multi_domain_groups_member" : {
+                "AcrossTheNarrowSea" : [
+                    "pirates.research\\weapons.master"
+                ]
+            },
+            "acls" : {
+                "forcechangepassword_tywin_jaime" : {"for": "harbor.master", "to": "ship.master", "right": "Ext-User-Force-Change-Password", "inheritance": "None"},
+                "GenericWrite_on_user_jaimie_bad" : {"for": "ship.master", "to": "bad.Storm", "right": "GenericWrite", "inheritance": "None"},
+                "Writedacl_bad_swann" : {"for": "bad.Storm", "to": "elizabeth.swann", "right": "WriteDacl", "inheritance": "None"},
+                "self-self-membership-on-group_swann_pirates" : {"for": "elizabeth.swann", "to": "Pirates", "right": "Ext-Self-Self-Membership", "inheritance": "None"},
+                "addmember_pirates_BlackPearl" : {"for": "Pirates", "to": "BlackPearl", "right": "Ext-Write-Self-Membership", "inheritance": "All"},
+                "write_owner_BlackPearl_HarborGuard" : {"for": "BlackPearl", "to": "HarborGuard", "right": "WriteOwner", "inheritance": "None"},
+                "GenericAll_HarborGuard_stanley" : {"for": "HarborGuard", "to": "stanley.Storm", "right": "GenericAll", "inheritance": "None"},
+                "GenericAll_stanley_dc" : {"for": "stanley.Storm", "to": "dc01$", "right": "GenericAll", "inheritance": "None"},
+                "GenericAll_group_acrrosdom_dc" : {"for": "AcrossTheNarrowSea", "to": "dc01$", "right": "GenericAll", "inheritance": "None"},
+                "GenericAll_hook_domadmin" : {"for": "captain.hook", "to": "Domain Admins", "right": "GenericAll", "inheritance": "None"},
+                "GenericAll_hook_domadmin_holder" : {"for": "captain.hook", "to": "CN=AdminSDHolder,CN=System,DC=Pirate,DC=ship", "right": "GenericAll", "inheritance": "None"}
+            },
+            "users" : {
+                "harbor.master" : {
+                    "firstname"   : "harbor",
+                    "surname"     : "master",
+                    "password"    : "HarborMaster",
+                    "city"        : "",
+                    "description" : "Harbor master",
+                    "groups"      : ["Master"],
+                    "path"        : "OU=Badlands,DC=Pirate,DC=ship"
+                },
+                "ship.master" : {
+                    "firstname"   : "Ship",
+                    "surname"     : "master",
+                    "password"    : "ships",
+                    "city"        : "",
+                    "description" : "Ship master",
+                    "groups"      : ["Master"],
+                    "path"        : "OU=Badlands,DC=Pirate,DC=ship"
+                },
+                "will.turner" : {
+                    "firstname"   : "Will",
+                    "surname"     : "Turner",
+                    "password"    : "il0vePearls!",
+                    "city"        : "",
+                    "description" : "Will Turner",
+                    "groups"      : ["Master","Storm","Domain Admins","Pirates"],
+                    "path"        : "OU=Badlands,DC=Pirate,DC=ship"
+                },
+                "elizabeth.swann" : {
+                    "firstname"   : "Elizabeth",
+                    "surname"     : "Swann",
+                    "password"    : "Alc00L&S3x",
+                    "city"        : "",
+                    "description" : "",
+                    "groups"      : ["Master"],
+                    "path"        : "OU=Westerlands,DC=Pirate,DC=ship"
+                },
+                "jack.sparrow" : {
+                    "firstname"   : "Jack",
+                    "surname"     : "Sparrow",
+                    "password"    : "iamthepirateoftheworld",
+                    "city"        : "",
+                    "description" : "",
+                    "groups"      : ["Storm","Domain Admins","Pirates"],
+                    "path"        : "OU=Badlands,DC=Pirate,DC=ship"
+                },
+                "bad.Storm" : {
+                    "firstname"   : "bad",
+                    "surname"     : "Storm",
+                    "password"    : "KillerStorm1",
+                    "city"        : "",
+                    "description" : "bad Storm",
+                    "groups"      : ["Storm","Master"],
+                    "path"        : "OU=Badlands,DC=Pirate,DC=ship"
+                },
+                ".Storm" : {
+                    "firstname"   : "alex",
+                    "surname"     : "Storm",
+                    "password"    : "EpicStorms!",
+                    "city"        : "",
+                    "description" : "alex Storm",
+                    "groups"      : ["Storm","Pirates"],
+                    "path"        : "OU=Badlands,DC=Pirate,DC=ship"
+                },
+                "stanley.Storm" : {
+                    "firstname"   : "stanley",
+                    "surname"     : "Storm",
+                    "password"    : "Storm2023!",
+                    "city"        : "",
+                    "description" : "stanley Storm",
+                    "groups"      : ["Storm","Pirates"],
+                    "path"        : "OU=Badlands,DC=Pirate,DC=ship"
+                },
+                "peg.leg" : {
+                    "firstname"   : "Peg",
+                    "surname"     : "leg",
+                    "password"    : "P3gL3g",
+                    "city"        : "",
+                    "description" : "peg.leg",
+                    "groups"      : ["Pirates"],
+                    "path"        : "OU=Badlands,DC=Pirate,DC=ship"
+                },
+                "captain.hook" : {
+                    "firstname"   : "Captain",
+                    "surname"     : "hook",
+                    "password"    : "H00kH@nd",
+                    "city"        : "",
+                    "description" : "Captain hook",
+                    "groups"      : ["Pirates"],
+                    "path"        : "OU=Badlands,DC=Pirate,DC=ship"
+                },
+                "ship.captain" : {
+                    "firstname"   : "Ship",
+                    "surname"     : "Captain",
+                    "password"    : "ShipOfShips",
+                    "city"        : "",
+                    "description" : "Ship Captain",
+                    "groups"      : ["Pirates"],
+                    "path"        : "OU=Badlands,DC=Pirate,DC=ship"
+                }
+            }
+        }
+    }
+}
+}

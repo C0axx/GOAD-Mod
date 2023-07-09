@@ -1,0 +1,1 @@
+Get-ADUser -Identity "brandon.Shipmate" | Set-ADAccountControl -DoesNotRequirePreAuth:$true

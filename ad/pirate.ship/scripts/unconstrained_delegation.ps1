@@ -1,0 +1,1 @@
+Get-ADComputer -Identity "srv03" | Set-ADAccountControl -TrustedForDelegation $true

@@ -1,0 +1,1 @@
+netdom trust Pirate.ship /d:pirates.research /enablesidhistory:yes

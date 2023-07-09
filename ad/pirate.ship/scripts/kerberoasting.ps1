@@ -1,0 +1,1 @@
+Set-ADUser -Identity "dave.snell" -ServicePrincipalNames @{Add='HTTP/overboardserver'}
